@@ -11,11 +11,13 @@ public class SelectApp {
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 
 		//Step-01 Load and register the Driver
-		Class.forName("com.mysql.cj.jdbc.Driver");
-		System.out.println("Loading the Driver....");
+//		Class.forName("com.mysql.cj.jdbc.Driver");
+//		System.out.println("Loading the Driver....");
+		// from jdbc 4.X autoloading features enabled
 		
 		//Step-02 Establish the connection
-		String url ="jdbc:mysql://localhost:3306/octbatch";
+//		String url ="jdbc:mysql://localhost:3306/octbatch";
+		String url ="jdbc:mysql:///octbatch";
 		String user ="root";
 		String password = "root";
 		Connection connection = DriverManager.getConnection(url, user, password);
