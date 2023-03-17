@@ -5,35 +5,31 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+//JDBC4.X autoloading feature is enabled.
 public class DeleteApp {
 
-	public static void main(String[] args) throws ClassNotFoundException, SQLException {
+	public static void main(String[] args) throws SQLException {
 
-	
-		
-		//Step-02 Establish the connection
-		String url ="jdbc:mysql:///octbatch";
-		String user ="root";
+		// Step2. Establish the Connection
+		String url = "jdbc:mysql:///octbatch";
+		String user = "root";
 		String password = "root";
 		Connection connection = DriverManager.getConnection(url, user, password);
-		System.out.println("Connection object created.....");
-		
-		//Step-03 create statement object and send the query
+		System.out.println("connection object created...");
+
+		// Step3. Create statement Object and send the Query
 		Statement statement = connection.createStatement();
-		System.out.println("Statement object created.....");
-		
-		//Step-04 execute the query and process the resultSet
-		String sqlDeleteQuery ="delete from student1 where sid =2";
-		int rowCount = statement.executeUpdate(sqlDeleteQuery);
-		System.out.println("No. of row Affected : "+rowCount);
-		
-		
-		//Step-05 Handle SQLException if generated
-		// we have handle the exception by throws
-		
-		//Step-06 Close the resources
+		System.out.println("statement object created...");
+
+		// Step4. Execute the Query and Process the resultSet
+		String sqlDeleteQuery = "delete from student where sid = 2";
+		int rowAffected = statement.executeUpdate(sqlDeleteQuery);
+		System.out.println("No of rows affected is :: " + rowAffected);
+
+		// Step6. Close the resources
 		statement.close();
 		connection.close();
-		System.out.println("Closing the resources....");
+		System.out.println("closing the resources...");
+
 	}
 }

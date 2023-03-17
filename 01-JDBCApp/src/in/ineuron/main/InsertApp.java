@@ -23,7 +23,7 @@ public class InsertApp {
 		System.out.println("Statement object created.....");
 		
 		//Step-04 execute the query and process the resultSet
-		String sqlInsertQuery ="insert into student1 (`sname`,`sage`,`saddress`) values('kohli','34','RCB')";
+		String sqlInsertQuery ="insert into student1 (`sname`,`sage`,`saddress`) values('kohli',34,'RCB')";
 		int rowCount = statement.executeUpdate(sqlInsertQuery);
 		System.out.println("No. of row Affected : "+rowCount);
 		
