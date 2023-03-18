@@ -3,9 +3,9 @@ package in.ineuron.main;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Scanner;
 
 import in.ineuron.util.JdbcUtil;
 /**
@@ -14,29 +14,32 @@ import in.ineuron.util.JdbcUtil;
  * @see www.ineuron.ai
  *
  */
-public class SelectApp {
+public class DeleteApp {
 
 		public static void main(String[] args) throws ClassNotFoundException, SQLException {
 			Connection connection = null;
-			Statement statement = null;
-			ResultSet resultSet = null;
+			PreparedStatement pstmt=null;
+			Scanner scanner = null;
+			
 		try {
 			connection = JdbcUtil.getJDBCConnection();
+			System.out.println("connection established...");
+			String sqlDeleteQuery = "delete from student1 where sid=?";
 			
 			if (connection != null) 
-				statement = connection.createStatement();
+				pstmt = connection.prepareStatement(sqlDeleteQuery);
 			
-			if (statement != null) 
-				resultSet=statement.executeQuery("select sid,sname,sage,saddress,sgender from student1");
-			
-			if (resultSet != null) {
-				System.out.printf("%-2s%14s%12s%15s%15s","SID","SNAME","SAGE","SADDRESS","SGENDER");
-				System.out.println();
-				while (resultSet.next()) {
-					System.out.printf("%2d%15s%12d%15s%15s", resultSet.getInt(1), resultSet.getString(2),
-							resultSet.getInt(3), resultSet.getString(4), resultSet.getString(5));
-					System.out.println();
-				}
+			if (pstmt != null) {
+				scanner = new Scanner(System.in);
+				System.out.println("Enter student id : ");
+				int sid=scanner.nextInt();
+				
+				//use precompiled query to set the values
+				pstmt.setInt(1, sid);
+				
+				// execute the query
+				int rowCount = pstmt.executeUpdate();
+				System.out.println("No of row deleted : "+rowCount);
 			}
 			
 			
@@ -49,7 +52,8 @@ public class SelectApp {
 		}
 		finally {
 			try {
-				JdbcUtil.cleanUp(connection,statement,resultSet);
+				JdbcUtil.cleanUp(connection,pstmt,null);
+				scanner.close();
 				System.out.println("Closing the resources....");
 			} catch (SQLException e) {
 				e.printStackTrace();

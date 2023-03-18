@@ -3,9 +3,8 @@ package in.ineuron.main;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.ResultSet;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import in.ineuron.util.JdbcUtil;
 /**
@@ -14,29 +13,31 @@ import in.ineuron.util.JdbcUtil;
  * @see www.ineuron.ai
  *
  */
-public class SelectApp {
+public class InsertApp {
 
 		public static void main(String[] args) throws ClassNotFoundException, SQLException {
 			Connection connection = null;
-			Statement statement = null;
-			ResultSet resultSet = null;
+			PreparedStatement pstmt=null;
+			
 		try {
 			connection = JdbcUtil.getJDBCConnection();
+			System.out.println("connection established...");
+			String sqlInsertQuery = "insert into student1(`sname`,`sage`,`saddress`,`sgender`)values(?,?,?,?)";
 			
 			if (connection != null) 
-				statement = connection.createStatement();
+				pstmt = connection.prepareStatement(sqlInsertQuery);
 			
-			if (statement != null) 
-				resultSet=statement.executeQuery("select sid,sname,sage,saddress,sgender from student1");
-			
-			if (resultSet != null) {
-				System.out.printf("%-2s%14s%12s%15s%15s","SID","SNAME","SAGE","SADDRESS","SGENDER");
-				System.out.println();
-				while (resultSet.next()) {
-					System.out.printf("%2d%15s%12d%15s%15s", resultSet.getInt(1), resultSet.getString(2),
-							resultSet.getInt(3), resultSet.getString(4), resultSet.getString(5));
-					System.out.println();
-				}
+			if (pstmt != null) {
+				//use precompiled query to set the values
+				pstmt.setString(1, "lalitha");
+				pstmt.setInt(2, 26);
+				pstmt.setString(3, "USA");
+				pstmt.setString(4, "F");
+				
+				System.out.println(sqlInsertQuery);
+				// execute the query
+				int rowCount = pstmt.executeUpdate();
+				System.out.println("No of row Affected : "+rowCount);
 			}
 			
 			
@@ -49,7 +50,7 @@ public class SelectApp {
 		}
 		finally {
 			try {
-				JdbcUtil.cleanUp(connection,statement,resultSet);
+				JdbcUtil.cleanUp(connection,pstmt,null);
 				System.out.println("Closing the resources....");
 			} catch (SQLException e) {
 				e.printStackTrace();
