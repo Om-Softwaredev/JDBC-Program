@@ -2,6 +2,7 @@ package in.ineuron.persistence;
 
 import in.ineuron.dto.Student;
 
+//persistence logic using JDBC api
 public class StudentDaoImpl implements IStudentDao {
 
 	@Override
