@@ -3,6 +3,7 @@ package in.ineuron.persistence;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import in.ineuron.dto.Student;
@@ -13,6 +14,7 @@ public class StudentDaoImpl implements IStudentDao {
 
 	Connection connection= null;
 	PreparedStatement pstmt=null;
+	ResultSet resultSet =null;
 	
 	@Override
 	public String addStudent(String sname, Integer sage, String saddress) {
@@ -46,7 +48,42 @@ public class StudentDaoImpl implements IStudentDao {
 
 	@Override
 	public Student searchStudent(Integer sid) {
-		return null;
+		String sqlSelectQuery ="select id,name,age,address from student where id=?";
+		Student student=null;
+		try {
+			connection=JdbcUtil.getJDBCConnection();
+			if (connection != null) 
+				pstmt=connection.prepareStatement(sqlSelectQuery);
+			
+			if (pstmt != null) 
+				pstmt.setInt(1, sid);
+			
+			if (pstmt != null) 
+				resultSet = pstmt.executeQuery();
+			
+			if (resultSet != null) {
+				if (resultSet.next()) {
+					student = new Student();
+					
+					//copy resultSet data to Student object
+					student.setSid(resultSet.getInt(1));
+					student.setSname(resultSet.getString(2));
+					student.setSage(resultSet.getInt(3));
+					student.setSaddress(resultSet.getString(4));
+					return student;
+				}
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return student;
 	}
 
 	@Override
