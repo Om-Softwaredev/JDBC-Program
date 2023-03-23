@@ -11,13 +11,35 @@ public class TestApp {
 
 	public static void main(String[] args) {
 		
-//		insertOperation();
+//		insertOperation();	
+//		selectOperation();
 		
-		selectOperation();
-		
-		
+		deleteRecord();
 	}
+
+
+	private static void deleteRecord() {
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Enter id of the student to be deleted : ");
+		int sid= scanner.nextInt();
+		
+		IStudentService studentService = StudentServiceFactory.getStudentService();
+		String msg=studentService.deleteStudent(sid);
+		if (msg.equalsIgnoreCase("success")) {
+			System.out.println("record Deleted succesfully....");
+		} else if (msg.equalsIgnoreCase("not found")) {
+			System.out.println("record not available to delete for given Id:: "+sid);
+		}
+		else {
+			System.out.println("record deletion failed....");
+		}
+		scanner.close();
+	}
+	
+	
+	@SuppressWarnings("unused")
 	private static void selectOperation() {
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("Enter id of the student : ");
 		int sid= scanner.nextInt();

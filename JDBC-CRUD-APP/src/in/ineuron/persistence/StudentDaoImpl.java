@@ -93,7 +93,32 @@ public class StudentDaoImpl implements IStudentDao {
 
 	@Override
 	public String deleteStudent(Integer sid) {
-		return null;
+		String sqldeleteQuery ="delete from student where id=? ";
+		try {
+			connection=JdbcUtil.getJDBCConnection();
+			if (connection != null) 
+				pstmt=connection.prepareStatement(sqldeleteQuery);
+			if (pstmt != null) {
+				pstmt.setInt(1, sid);
+				
+				int rowAffected = pstmt.executeUpdate();
+				if (rowAffected==1) {
+					return "success";
+				}else {
+					return "not found";
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}catch (Exception e) {
+			e.printStackTrace();
+			return "failure";
+		}
+		
+		return "failure";
 	}
 
 }
