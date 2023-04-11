@@ -87,8 +87,31 @@ public class StudentDaoImpl implements IStudentDao {
 	}
 
 	@Override
-	public String updateStudent(Integer sid, String sname, Integer sage, String saddress) {
-		return null;
+	public String updateStudent(Student student) {
+		String sqlUpdateQuery ="update student set name=?,age=?,address=?where id=?";
+		try {
+			connection=JdbcUtil.getJDBCConnection();
+			if (connection != null) 
+				pstmt=connection.prepareStatement(sqlUpdateQuery);
+			if (pstmt != null) {
+				pstmt.setString(1, student.getSname());
+				pstmt.setInt(2, student.getSage());
+				pstmt.setString(3, student.getSaddress());
+				pstmt.setInt(4, student.getSid());
+				
+				int rowAffected = pstmt.executeUpdate();
+				if (rowAffected==1) {
+					return "success";
+				}
+			}
+			
+		} catch (SQLException |IOException e) {
+			e.printStackTrace();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "failure";
 	}
 
 	@Override
